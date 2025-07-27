@@ -1,3 +1,5 @@
+import os
+from pathlib import Path
 from fastapi import FastAPI, HTTPException, Depends, status
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse
@@ -20,6 +22,14 @@ app = FastAPI(
     description="Une API sécurisée pour la gestion de magasin avec authentification et gestion des rôles.",
     version="2.0.0"
 )
+
+# ==============================================================================
+# CHEMINS ABSOLUS POUR LE FRONTEND
+# ==============================================================================
+
+# Le dossier racine du projet (contient backend/ et frontend/)
+PROJECT_ROOT = Path(__file__).resolve().parent.parent
+FRONTEND_BUILD_DIR = PROJECT_ROOT / "frontend" / "build"
 
 # ==============================================================================
 # SCHÉMAS PYDANTIC (Validation des données)
@@ -305,10 +315,10 @@ async def api_get_dashboard_kpis(db_session: Session = Depends(get_db_session)):
 # SERVIR L'APPLICATION FRONTEND
 # ==============================================================================
 
-app.mount("/static", StaticFiles(directory="../frontend/build/static"), name="static")
+app.mount("/static", StaticFiles(directory=FRONTEND_BUILD_DIR / "static"), name="static")
 
 @app.get("/{full_path:path}", include_in_schema=False)
 async def serve_react_app(full_path: str):
     if full_path.startswith("api/") or full_path.startswith("docs") or full_path.startswith("redoc"):
         raise HTTPException(status_code=404)
-    return FileResponse("../frontend/build/index.html")
+    return FileResponse(FRONTEND_BUILD_DIR / "index.html")
