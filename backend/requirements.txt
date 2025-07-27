@@ -8,6 +8,7 @@ weasyprint
 # Security and Authentication
 psycopg2-binary
 passlib[argon2]
+argon2-cffi
 python-jose[cryptography]
 
 # Database - PostgreSQL

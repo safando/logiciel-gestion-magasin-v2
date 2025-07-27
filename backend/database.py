@@ -9,13 +9,9 @@ from passlib.context import CryptContext
 # CONFIGURATION ET MOTEUR DE LA BASE DE DONNÉES
 # ==============================================================================
 
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = "sqlite:///../Logiciel gestion Magasin/magasin.db"
 
-engine_args = {}
-if DATABASE_URL and DATABASE_URL.startswith("sqlite"):
-    engine_args["connect_args"] = {"check_same_thread": False}
-
-engine = create_engine(DATABASE_URL, **engine_args)
+engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
 pwd_context = CryptContext(schemes=["argon2", "bcrypt"], deprecated="auto")
@@ -62,7 +58,7 @@ class Vente(Base):
     quantite = Column(Integer, nullable=False)
     prix_total = Column(Float, nullable=False)
     date = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
 
     produit = relationship("Produit", back_populates="ventes")
     user = relationship("User")
@@ -73,7 +69,7 @@ class Perte(Base):
     produit_id = Column(Integer, ForeignKey("produits.id"), nullable=False)
     quantite = Column(Integer, nullable=False)
     date = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
 
     produit = relationship("Produit", back_populates="pertes")
     user = relationship("User")
@@ -85,7 +81,7 @@ class FraisAnnexe(Base):
     description = Column(String, nullable=False)
     montant = Column(Float, nullable=False)
     date = Column(DateTime, default=lambda: datetime.now(timezone.utc))
-    user_id = Column(Integer, ForeignKey("users.id"), nullable=False)
+    user_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     
     produit = relationship("Produit", back_populates="frais_annexes")
     user = relationship("User")
@@ -103,23 +99,8 @@ def get_db():
         db.close()
 
 def create_db_and_tables():
-    Base.metadata.create_all(bind=engine)
-    with get_db() as db:
-        if not db.query(Role).count():
-            db.add(Role(name="admin"))
-            db.add(Role(name="manager"))
-            db.add(Role(name="employee"))
-            db.commit()
-        if not db.query(User).count():
-            admin_role = db.query(Role).filter(Role.name == "admin").first()
-            admin_user = User(
-                username="admin",
-                email="admin@example.com",
-                hashed_password=pwd_context.hash("adminpassword")
-            )
-            admin_user.roles.append(admin_role)
-            db.add(admin_user)
-            db.commit()
+    # Ne fait rien, car nous utilisons une base de données existante
+    pass
 
 # ==============================================================================
 # LOGIQUE MÉTIER
