@@ -1,0 +1,18 @@
+fastapi
+uvicorn[standard]
+pandas
+openpyxl
+python-multipart
+weasyprint
+
+# Security and Authentication
+passlib[bcrypt]
+python-jose[cryptography]
+
+# Database - PostgreSQL
+SQLAlchemy
+psycopg2-binary
+
+# Testing
+pytest
+httpx

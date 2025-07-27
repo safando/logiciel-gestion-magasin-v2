@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+env/
+venv/
+
+# Node
+node_modules/
+.npm
+npm-debug.log
+
+# Keep the build folder for deployment
+!frontend/build
+
+# IDE / Editor
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+
+# Database
+*.sqlite3
+*.db
