@@ -57,7 +57,6 @@ const Stock = () => {
 
         try {
             if (currentProduit) {
-                if (currentProduit) {
                 await axios.put(`/api/produits/${currentProduit.id}`, data, { headers: { Authorization: `Bearer ${token}` } });
                 toast.success("Produit mis à jour avec succès.");
             } else {
