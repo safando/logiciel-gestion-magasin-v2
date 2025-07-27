@@ -19,7 +19,7 @@ ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 30
 
 # Contexte pour le hachage des mots de passe
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["argon2", "bcrypt"], deprecated="auto")
 
 # Schéma OAuth2 pour que FastAPI sache comment trouver le token
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl="/api/token")

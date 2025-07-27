@@ -6,7 +6,7 @@ python-multipart
 weasyprint
 
 # Security and Authentication
-passlib[bcrypt]
+passlib[argon2]
 python-jose[cryptography]
 
 # Database - PostgreSQL

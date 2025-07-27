@@ -14,7 +14,7 @@ DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./magasin_v2.db")
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 Base = declarative_base()
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
+pwd_context = CryptContext(schemes=["argon2", "bcrypt"], deprecated="auto")
 
 # ==============================================================================
 # MODÈLES DE TABLES (SQLAlchemy ORM)
