@@ -178,6 +178,33 @@ def delete_user(db: Session, user_id: int):
 def get_all_produits(db: Session):
     return db.query(Produit).order_by(Produit.nom).all()
 
+def add_produit(db: Session, nom: str, prix_achat: float, prix_vente: float, quantite: int):
+    nouveau_produit = Produit(nom=nom, prix_achat=prix_achat, prix_vente=prix_vente, quantite=quantite)
+    db.add(nouveau_produit)
+    db.commit()
+    db.refresh(nouveau_produit)
+    return nouveau_produit
+
+def update_produit(db: Session, produit_id: int, nom: str, prix_achat: float, prix_vente: float, quantite: int):
+    produit = db.query(Produit).filter(Produit.id == produit_id).first()
+    if produit:
+        produit.nom = nom
+        produit.prix_achat = prix_achat
+        produit.prix_vente = prix_vente
+        produit.quantite = quantite
+        db.commit()
+        db.refresh(produit)
+    return produit
+
+def delete_produit(db: Session, produit_id: int):
+    produit = db.query(Produit).filter(Produit.id == produit_id).first()
+    if produit:
+        db.delete(produit)
+        db.commit()
+        return True
+    return False
+
+
 def get_all_ventes(db: Session):
     return db.query(Vente).options(joinedload(Vente.produit)).order_by(Vente.date.desc()).all()
 

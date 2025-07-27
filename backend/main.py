@@ -223,6 +223,21 @@ async def delete_user(user_id: int, db_session: Session = Depends(get_db_session
 async def api_get_produits(db_session: Session = Depends(get_db_session)):
     return db.get_all_produits(db_session)
 
+@app.post("/api/produits", response_model=Produit, dependencies=[Depends(require_role('manager'))])
+async def api_add_produit(produit: ProduitBase, db_session: Session = Depends(get_db_session)):
+    return db.add_produit(db_session, **produit.model_dump())
+
+@app.put("/api/produits/{produit_id}", response_model=Produit, dependencies=[Depends(require_role('manager'))])
+async def api_update_produit(produit_id: int, produit: ProduitBase, db_session: Session = Depends(get_db_session)):
+    return db.update_produit(db_session, produit_id=produit_id, **produit.model_dump())
+
+@app.delete("/api/produits/{produit_id}", status_code=status.HTTP_204_NO_CONTENT, dependencies=[Depends(require_role('admin'))])
+async def api_delete_produit(produit_id: int, db_session: Session = Depends(get_db_session)):
+    deleted = db.delete_produit(db_session, produit_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Produit non trouvé")
+    return
+
 @app.get("/api/ventes", response_model=List[Vente], dependencies=[Depends(get_current_active_user)])
 async def api_get_ventes(db_session: Session = Depends(get_db_session)):
     return db.get_all_ventes(db_session)
