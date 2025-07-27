@@ -5,6 +5,7 @@ from pydantic import BaseModel, ConfigDict
 from typing import List, Optional
 from datetime import datetime, timedelta
 from sqlalchemy.orm import Session
+from fastapi.security import OAuth2PasswordRequestForm
 from . import database as db
 from . import auth
 
