@@ -9,7 +9,7 @@ from passlib.context import CryptContext
 # CONFIGURATION ET MOTEUR DE LA BASE DE DONNÉES
 # ==============================================================================
 
-DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./magasin_v2.db")
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 engine = create_engine(DATABASE_URL, connect_args={"check_same_thread": False})
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)

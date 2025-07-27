@@ -6,6 +6,7 @@ python-multipart
 weasyprint
 
 # Security and Authentication
+psycopg2-binary
 passlib[argon2]
 python-jose[cryptography]
 
