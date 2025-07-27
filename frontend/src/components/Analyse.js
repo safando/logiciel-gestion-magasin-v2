@@ -1,6 +1,7 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import axios from 'axios';
 import { Line, Bar } from 'react-chartjs-2';
+import { toast } from 'react-toastify';
 import {
     Chart as ChartJS,
     CategoryScale,
@@ -29,15 +30,19 @@ const Analyse = () => {
     const [startDate, setStartDate] = useState(new Date(new Date().setDate(new Date().getDate() - 30)).toISOString().split('T')[0]);
     const [endDate, setEndDate] = useState(new Date().toISOString().split('T')[0]);
 
-    const fetchData = async () => {
-        const token = localStorage.getItem('token');
-        const response = await axios.get(`/api/analyse?start_date=${startDate}&end_date=${endDate}`, { headers: { Authorization: `Bearer ${token}` } });
-        setData(response.data);
-    };
+    const fetchData = useCallback(async () => {
+        try {
+            const token = localStorage.getItem('token');
+            const response = await axios.get(`/api/analyse?start_date=${startDate}&end_date=${endDate}`, { headers: { Authorization: `Bearer ${token}` } });
+            setData(response.data);
+        } catch (error) {
+            toast.error("Erreur lors de la récupération des données d'analyse.");
+        }
+    }, [startDate, endDate]);
 
     useEffect(() => {
         fetchData();
-    }, [startDate, endDate]);
+    }, [fetchData]);
 
     if (!data) {
         return <div>Chargement...</div>;
